@@ -8,7 +8,11 @@
 
 /* ========== BODY ========== */
 body {
+<<<<<<< HEAD
    background: linear-gradient(145deg, #080819, #101033, #1a1a3d);
+=======
+  background: radial-gradient(circle at top left, #0a0a25, #050510 80%);
+>>>>>>> b98baf73827f3d8b6b2220630551e2b28c5e01cc
   color: #fff;
   min-height: 100vh;
   display: flex;
