@@ -1,14 +1,16 @@
-<<<<<<< HEAD
 // ================= FIREBASE IMPORT =================
 import { auth, db } from "./Firebase_config.js";
-import { 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword 
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+  signInWithPopup,
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-import { 
-  setDoc, 
-  doc, 
-  getDoc 
+import {
+  setDoc,
+  doc,
+  getDoc,
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
 // =================== HÀM KIỂM TRA ===================
@@ -18,8 +20,7 @@ function isValidEmail(email) {
 
 // =================== DOM EVENTS ===================
 document.addEventListener("DOMContentLoaded", () => {
-
-  // --- ĐĂNG KÝ ---
+  // =================== ĐĂNG KÝ ===================
   const signupForm = document.getElementById("registerForm");
   if (signupForm) {
     signupForm.addEventListener("submit", async (e) => {
@@ -30,136 +31,171 @@ document.addEventListener("DOMContentLoaded", () => {
       const password = document.getElementById("signupPassword").value;
       const confirmPassword = document.getElementById("confirmPassword").value;
 
-      if (!isValidEmail(email)) {
-        alert("⚠️ Email không hợp lệ!");
-        return;
-      }
-
-      if (password !== confirmPassword) {
-        alert("⚠️ Mật khẩu xác nhận không khớp!");
-        return;
-      }
+      if (!isValidEmail(email)) return alert("⚠️ Email không hợp lệ!");
+      if (password !== confirmPassword)
+        return alert("⚠️ Mật khẩu xác nhận không khớp!");
 
       try {
-        // Tạo tài khoản mới
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
         const user = userCredential.user;
 
         // Lưu thông tin vào Firestore
         await setDoc(doc(db, "users", user.uid), {
-          email: email,
-          username: username,
-          createdAt: new Date()
+          email,
+          username,
+          createdAt: new Date(),
         });
 
-        alert("✅ Đăng ký thành công!");
-        window.location.href = "Home.html"; // Chuyển sang trang chính
+        alert(`✅ Chào mừng ${username} đến với Skemi!`);
+        window.location.href = "Home.html";
       } catch (error) {
-        console.error("Chi tiết lỗi:", error);
-        alert(`❌ Lỗi đăng ký: ${error.code} - ${error.message}`);
+        let message = "❌ Đăng ký thất bại!";
+        switch (error.code) {
+          case "auth/email-already-in-use":
+            message = "⚠️ Email này đã được sử dụng, vui lòng thử email khác!";
+            break;
+          case "auth/invalid-email":
+          case "auth/invalid-credential":
+            message = "⚠️ Email hoặc password không chính xác!";
+            break;
+          case "auth/weak-password":
+            message = "⚠️ Mật khẩu quá yếu, vui lòng dùng ít nhất 6 ký tự!";
+            break;
+            
+          default:
+            message = `⚠️ Lỗi: ${error.message}`;
+        }
+        alert(message);
+        console.error(error);
       }
     });
   }
 
-  // --- ĐĂNG NHẬP ---
+  // =================== ĐĂNG NHẬP ===================
   const loginForm = document.getElementById("loginForm");
   if (loginForm) {
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-
-      const username = document.getElementById("loginUsername")?.value.trim();
       const email = document.getElementById("loginEmail").value.trim();
       const password = document.getElementById("loginPassword").value;
 
       try {
-        // Đăng nhập
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
         const user = userCredential.user;
 
-        // Lấy dữ liệu Firestore để so username (nếu có trường username)
-        const userDoc = await getDoc(doc(db, "users", user.uid));
-        if (userDoc.exists()) {
-          const data = userDoc.data();
-          if (username && data.username !== username) {
-            alert("⚠️ Sai username!");
-            return;
+        // Lấy username từ Firestore
+        let username = "bạn";
+        try {
+          const userDoc = await getDoc(doc(db, "users", user.uid));
+          if (userDoc.exists()) {
+            username = userDoc.data().username;
           }
+        } catch (err) {
+          console.error("Lỗi lấy username:", err);
         }
 
-        alert("✅ Đăng nhập thành công!");
-        window.location.href = "Home.html"; // Chuyển sang trang chính
+        alert(`✅ Chào mừng ${username} đã quay trở lại Skemi!`);
+        window.location.href = "Home.html";
       } catch (error) {
-        console.error("Chi tiết lỗi:", error);
-        alert(`❌ Lỗi đăng nhập: ${error.code} - ${error.message}`);
+        console.error(error);
+        let message = "❌ Đăng nhập thất bại!";
+
+        switch (error.code) {
+          case "auth/invalid-email":
+          case "auth/wrong-password":
+          case "auth/invalid-credential":
+            message = "⚠️ Email hoặc mật khẩu không chính xác!";
+            break;
+          case "auth/user-disabled":
+            message = "🚫 Tài khoản này đã bị vô hiệu hóa!";
+            break;
+          case "auth/user-not-found":
+            message = "❌ Không tìm thấy tài khoản với email này!";
+            break;
+          default:
+            message = `⚠️ Lỗi: ${error.code}`;
+        }
+
+        alert(message);
+      }
+    });
+  }
+
+  // =================== ĐĂNG NHẬP GOOGLE ===================
+  const googleBtn = document.getElementById("googleLogin");
+  if (googleBtn) {
+    const provider = new GoogleAuthProvider();
+    googleBtn.addEventListener("click", async () => {
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+
+        // Nếu là lần đầu đăng nhập → lưu Firestore
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (!userDoc.exists()) {
+          await setDoc(doc(db, "users", user.uid), {
+            email: user.email,
+            username: user.displayName || user.email.split("@")[0],
+            createdAt: new Date(),
+            provider: "Google",
+          });
+        }
+
+        alert(`✅ Xin chào ${user.displayName || user.email}!`);
+        window.location.href = "Home.html";
+      } catch (error) {
+        // Nếu người dùng đóng popup giữa chừng thì không báo lỗi
+        if (error.code === "auth/popup-closed-by-user") {
+          console.log("Người dùng đóng popup đăng nhập Google giữa chừng.");
+          return;
+        }
+
+        alert("❌ Lỗi đăng nhập Google!");
+        console.error(error);
       }
     });
   }
 });
-=======
-// ================= FIREBASE INIT =================
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import { 
-  getAuth, 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword 
-} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
-// 🔥 Thêm cấu hình Firebase của cậu chủ tại đây:
-const firebaseConfig = {
-  apiKey: "AIzaSyBYAgeL5xl2yfKMcmgiln5etyy-I-fvot0",
-  authDomain: "skemivn.firebaseapp.com",
-  projectId: "skemivn",
-  storageBucket: "skemivn.firebasestorage.app",
-  messagingSenderId: "430145480951",
-  appId: "1:430145480951:web:dd640a426315a19aadcbf2"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-// ================= ĐĂNG KÝ =================
-const registerForm = document.getElementById("registerForm");
-if (registerForm) {
-  registerForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
-    const confirmPassword = document.getElementById("confirmPassword").value;
-
-    if (password !== confirmPassword) {
-      alert("⚠️ Mật khẩu xác nhận không khớp!");
-      return;
-    }
-
+// =================== ĐĂNG NHẬP FACEBOOK ===================
+const facebookBtn = document.getElementById("facebookLogin");
+if (facebookBtn) {
+  const fbProvider = new FacebookAuthProvider();
+  facebookBtn.addEventListener("click", async () => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      alert("✅ Tạo tài khoản thành công!");
+      const result = await signInWithPopup(auth, fbProvider);
+      const user = result.user;
+
+      // Nếu là lần đầu đăng nhập → lưu Firestore
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      if (!userDoc.exists()) {
+        await setDoc(doc(db, "users", user.uid), {
+          email: user.email,
+          username: user.displayName || user.email.split("@")[0],
+          createdAt: new Date(),
+          provider: "Facebook",
+        });
+      }
+
+      alert(`✅ Xin chào ${user.displayName || user.email}!`);
       window.location.href = "Home.html";
     } catch (error) {
-      alert("❌ Lỗi: " + error.message);
+      // Nếu người dùng đóng popup giữa chừng thì không báo lỗi
+      if (error.code === "auth/popup-closed-by-user") {
+        console.log("Người dùng đóng popup Facebook giữa chừng.");
+        return;
+      }
+
+      alert("❌ Lỗi đăng nhập Facebook!");
+      console.error(error);
     }
   });
 }
-
-// ================= ĐĂNG NHẬP =================
-const loginForm = document.getElementById("loginForm");
-if (loginForm) {
-  loginForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const email = document.getElementById("loginUsername").value.trim();
-    const password = document.getElementById("loginPassword").value;
-
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      alert("✅ Đăng nhập thành công!");
-      window.location.href = "Home.html"; // Trang chính Skemi
-    } catch (error) {
-      alert("❌ Lỗi: " + error.message);
-    }
-  });
-}
-
-export { app }; 
->>>>>>> b98baf73827f3d8b6b2220630551e2b28c5e01cc

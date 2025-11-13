@@ -18,24 +18,17 @@ if (!sessionId) {
 // =================== Lấy username từ Firestore =================
 function loadUsername() {
   auth.onAuthStateChanged(async (user) => {
-    let username = localStorage.getItem("username");
+    let username = "bạn"; // mặc định
 
-    if (!username) {
-      if (user) {
-        try {
-          const userDoc = await getDoc(doc(db, "users", user.uid));
-          if (userDoc.exists()) {
-            username = userDoc.data().username;
-            localStorage.setItem("username", username);
-          } else {
-            username = "bạn";
-          }
-        } catch (err) {
-          console.error("Lỗi lấy username từ Firestore:", err);
-          username = "bạn";
+    if (user) {
+      try {
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+          username = userDoc.data().username;
+          localStorage.setItem("username", username); // cập nhật lại
         }
-      } else {
-        username = "bạn";
+      } catch (err) {
+        console.error("Lỗi lấy username từ Firestore:", err);
       }
     }
 
@@ -44,6 +37,7 @@ function loadUsername() {
     }
   });
 }
+
 
 // Gọi hàm khi load trang
 window.addEventListener("DOMContentLoaded", loadUsername);
@@ -91,7 +85,7 @@ async function sendQuestion() {
     appendMessage("AI", data.answer || "Không có câu trả lời.");
   } catch (err) {
     chatContainer.removeChild(loadingMsg);
-    appendMessage("AI", "Lỗi kết nối server.");
+    appendMessage("AI", "Server đang tạm dừng để bảo trì.");
     console.error(err);
   }
 }

@@ -114,10 +114,7 @@ canvas {
   box-shadow: 0 0 10px rgba(0, 217, 255, 0.2);
 }
 
-<<<<<<< HEAD
 
-=======
->>>>>>> b98baf73827f3d8b6b2220630551e2b28c5e01cc
 .logo {
   font-size: 1.5rem;
   font-weight: 700;
@@ -155,7 +152,6 @@ canvas {
   cursor: pointer;
   font-weight: 600;
   transition: 0.3s;
-<<<<<<< HEAD
   position: fixed;
   padding-bottom: 15px;
   top: 850px;
@@ -164,10 +160,6 @@ canvas {
 }
 
 
-=======
-}
-
->>>>>>> b98baf73827f3d8b6b2220630551e2b28c5e01cc
 #logoutBtn:hover {
   background: linear-gradient(90deg, #ff3366, #ff9955);
   box-shadow: 0 0 10px #ff7b4d;

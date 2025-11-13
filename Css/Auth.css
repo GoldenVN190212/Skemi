@@ -8,11 +8,7 @@
 
 /* ========== BODY ========== */
 body {
-<<<<<<< HEAD
-   background: linear-gradient(145deg, #080819, #101033, #1a1a3d);
-=======
-  background: radial-gradient(circle at top left, #0a0a25, #050510 80%);
->>>>>>> b98baf73827f3d8b6b2220630551e2b28c5e01cc
+  background: linear-gradient(145deg, #080819, #101033, #1a1a3d);
   color: #fff;
   min-height: 100vh;
   display: flex;
@@ -110,4 +106,30 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+
+/* ========== GOOGLE LOGIN BUTTON ========== */
+#googleLogin {
+  margin-top: 20px;
+  background: linear-gradient(90deg, #a020f0, #00bfff);
+  color: #fff;
+  font-weight: 600;
+}
+
+#googleLogin:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+}
+
+#facebookLogin{
+  margin-top: 20px;
+  background: linear-gradient(90deg, #a020f0, #00bfff);
+  color: #fff;
+  font-weight: 600;
+}
+
+#facebookLogin:hover{
+  filter: brightness(1.1);
+  transform: translateY(-2px);
 }
