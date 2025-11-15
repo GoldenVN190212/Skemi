@@ -82,7 +82,11 @@ async function sendQuestion() {
 
     const data = await res.json();
     chatContainer.removeChild(loadingMsg);
-    appendMessage("AI", data.answer || "Không có câu trả lời.");
+
+    // Hiển thị từng mô hình riêng biệt
+    appendMessage("Gemma", data.gemma || "Không có phản hồi từ Gemma.");
+    appendMessage("Mistral", data.mistral || "Không có phản hồi từ Mistral.");
+    appendMessage("LLaVA", data.llava || "Không có phản hồi từ LLaVA.");
   } catch (err) {
     chatContainer.removeChild(loadingMsg);
     appendMessage("AI", "Server đang tạm dừng để bảo trì.");
