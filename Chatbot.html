@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skemi Chatbot</title>
+
+  <link rel="stylesheet" href="./Css/Chatbot.css" />
+</head>
+
+<body>
+
+  <!-- ✅ NAVBAR CHUẨN ĐÃ FIX -->
+  <nav class="navbar" id="navbar">
+    <div class="logo">Skemi</div>
+
+    <!-- GIỮA -->
+    <div class="nav-links-center">
+      <ul class="nav-links">
+        <li><a href="Home.html">🏠 Home</a></li>
+        <li><a href="Chart.html">📚 Chart</a></li>
+        <li><a href="Chatbot.html" class="active">🤖 Chatbot</a></li>
+      </ul>
+    </div>
+
+    <!-- PHẢI -->
+    <div id="auth-buttons" class="auth-buttons"></div>
+  </nav>
+  <!-- END NAVBAR -->
+
+  <header>
+    <h1>Skemi Chatbot</h1>
+  </header>
+
+  <main>
+    <div class="chat">
+      <h2 id="chatTitle">Xin chào bạn, hôm nay bạn muốn học bài toán nào?</h2>
+      <div id="chatContainer"></div>
+
+      <textarea id="userInput" placeholder="Nhập câu hỏi..."></textarea>
+      <button id="sendBtn">Gửi</button>
+    </div>
+  </main>
+
+  <script type="module" src="./Js/User_navbar.js"></script>
+  <script type="module" src="./Js/Chatbot.js"></script>
+</body>
+</html>
