@@ -5,7 +5,7 @@ import json
 # -----------------------------
 # 1) CHATBOT — trả về TEXT
 # -----------------------------
-def call_gemma3_chat(message):
+def call_gemma3_block(message):
     messages = [
         {"role": "system", "content": "Bạn là AI hỗ trợ trả lời câu hỏi."},
         {"role": "user", "content": message}

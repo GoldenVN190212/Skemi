@@ -1,8 +1,4 @@
-// ----------------------------
-// HOME.JS (FULL FIXED v2)
-// Hiện topic + vẽ mindmap
-// ----------------------------
-
+// Home.js
 const fileInput = document.getElementById("fileInput");
 const importBtn = document.getElementById("importBtn");
 const summaryBtn = document.getElementById("summaryBtn");
@@ -12,13 +8,9 @@ const ctx = canvas.getContext("2d");
 
 let lastMindmapData = null;
 
-// ----------------------------
-// Typing text effect on canvas
-// ----------------------------
 async function typeCanvasText(x, y, text, speed = 20) {
     ctx.font = "20px Arial";
     ctx.fillStyle = "#000";
-
     let current = "";
     for (let char of text) {
         current += char;
@@ -28,16 +20,9 @@ async function typeCanvasText(x, y, text, speed = 20) {
     }
 }
 
-// ----------------------------
-// Draw mindmap
-// ----------------------------
 async function drawMindmap(topic, subtopics) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Main topic typing
     await typeCanvasText(300, 60, topic);
-
-    // Subtopics
     ctx.font = "18px Arial";
     let y = 120;
     for (let s of subtopics) {
@@ -46,15 +31,8 @@ async function drawMindmap(topic, subtopics) {
     }
 }
 
-// ----------------------------
-// IMPORT FILE → SERVER
-// ----------------------------
 importBtn.addEventListener("click", async () => {
-    if (!fileInput.files.length) {
-        alert("⚠️ Vui lòng chọn file trước!");
-        return;
-    }
-
+    if (!fileInput.files.length) return alert("⚠️ Vui lòng chọn file trước!");
     const formData = new FormData();
     formData.append("file", fileInput.files[0]);
 
@@ -66,22 +44,11 @@ importBtn.addEventListener("click", async () => {
             method: "POST",
             body: formData,
         });
-
         const data = await res.json();
-        console.log("Server trả về:", data);
+        if (data.error) return alert("❌ Lỗi server: " + data.error);
 
-        if (data.error) {
-            alert("❌ Lỗi server: " + data.error);
-            return;
-        }
-
-        // Save returned data
         lastMindmapData = data;
-
-        // ✔️ Thông báo chủ đề
-        alert(`📌 Chủ đề chính của tài liệu là:\n\n👉 ${data.topic}`);
-
-        // ✔️ Vẽ mindmap
+        alert(`📌 Chủ đề chính của tài liệu:\n\n👉 ${data.topic}`);
         drawMindmap(data.topic, data.detail);
 
     } catch (e) {
@@ -93,20 +60,12 @@ importBtn.addEventListener("click", async () => {
     }
 });
 
-// ----------------------------
-// NÚT TÓM TẮT
-// ----------------------------
 summaryBtn.addEventListener("click", () => {
     if (!lastMindmapData) return alert("Bạn chưa import file!");
-
     alert("📘 TÓM TẮT:\n\n" + lastMindmapData.summary.join("\n"));
 });
 
-// ----------------------------
-// NÚT CHI TIẾT
-// ----------------------------
 detailBtn.addEventListener("click", () => {
     if (!lastMindmapData) return alert("Bạn chưa import file!");
-
     alert("📙 CHI TIẾT:\n\n" + lastMindmapData.detail.join("\n"));
 });
