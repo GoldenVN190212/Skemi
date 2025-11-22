@@ -16,15 +16,14 @@ body {
   min-height: 100vh;
 }
 
-/* NAVBAR - Cập nhật */
+/* NAVBAR */
 .navbar {
-  height: 65px; 
+  height: 65px;
   width: 100%;
   background: rgba(255, 255, 255, 0.05);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
-  /* Căn đều logo, nav-links-center và auth-buttons */
-  justify-content: space-between; 
+  justify-content: space-between;
   align-items: center;
   padding: 12px 40px;
   position: sticky;
@@ -42,17 +41,16 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
-/* Căn giữa các liên kết Home, Chart, Chatbot */
 .nav-links-center {
-  flex-grow: 1; /* Cho phép chiếm không gian trống để đẩy logo và auth-buttons ra xa */
+  flex-grow: 1;
   display: flex;
-  justify-content: center; /* Căn giữa nội dung bên trong (ul.nav-links) */
+  justify-content: center;
 }
 
 .nav-links {
   list-style: none;
   display: flex;
-  gap: 25px; /* Khoảng cách giữa các mục Home, Chart, Chatbot */
+  gap: 25px;
 }
 
 .nav-links a {
@@ -68,16 +66,14 @@ body {
   text-shadow: 0 0 8px #00d9ff;
 }
 
-/* Container cho nút Log in / Sign up / UserBtn */
 .auth-buttons {
   display: flex;
-  gap: 8px; /* Khoảng cách giữa Log in và Sign up */
+  gap: 8px;
   align-items: center;
 }
 
-/* Điều chỉnh các nút chung trong navbar (Log in/Sign up/UserBtn) */
 .navbar .tab {
-  padding: 8px 16px; 
+  padding: 8px 16px;
   font-weight: 500;
   border-radius: 8px;
   background: linear-gradient(90deg, #9b4dff, #00d9ff);
@@ -92,7 +88,7 @@ body {
   box-shadow: 0 0 8px #00d9ff;
 }
 
-/* Nút logout (Giữ nguyên vị trí cố định) */
+/* Nút logout */
 #logoutBtn {
   background: linear-gradient(90deg, #ff4d79, #ff7b4d);
   color: #fff;
@@ -106,7 +102,7 @@ body {
   padding-bottom: 15px;
   top: 850px;
   right: 50px;
-  z-index: 100; 
+  z-index: 100;
 }
 
 #logoutBtn:hover {
@@ -159,24 +155,7 @@ main {
   transform: translateY(-3px);
 }
 
-/* BUTTONS */
-button {
-  background: linear-gradient(90deg, #9b4dff, #00d9ff);
-  color: #fff;
-  border: none;
-  padding: 12px 25px;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: 0.3s;
-}
-
-button:hover {
-  background: linear-gradient(90deg, #b87cff, #00b3e6);
-  box-shadow: 0 0 12px #00d9ff;
-}
-
-/* CHAT AREA - Cải tiến */
+/* CHAT AREA */
 #chatContainer {
   background: linear-gradient(135deg, #0f0f2a, #1c1c3c);
   height: 450px;
@@ -186,8 +165,10 @@ button:hover {
   margin-bottom: 20px;
   font-size: 16px;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   box-shadow: 0 0 20px rgba(0, 217, 255, 0.1);
-  transition: 0.3s ease;
 }
 
 /* Tin nhắn người dùng */
@@ -218,7 +199,7 @@ button:hover {
   box-shadow: 0 0 10px rgba(0, 217, 255, 0.2);
 }
 
-/* Hiệu ứng đợi AI */
+/* Loading effect */
 .loading {
   font-style: italic;
   color: #aaa;
@@ -244,6 +225,24 @@ button:hover {
   font-size: 16px;
 }
 
+/* BUTTONS */
+button {
+  background: linear-gradient(90deg, #9b4dff, #00d9ff);
+  color: #fff;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+  margin-top: 10px;
+}
+
+button:hover {
+  background: linear-gradient(90deg, #b87cff, #00b3e6);
+  box-shadow: 0 0 12px #00d9ff;
+}
+
 /* SCROLLBAR */
 ::-webkit-scrollbar {
   width: 10px;
@@ -254,7 +253,7 @@ button:hover {
   border-radius: 6px;
 }
 
-/* Tiêu đề chat (Xin chào ...) */
+/* Chat title */
 #chatTitle {
   text-align: center; 
   font-size: 30px; 

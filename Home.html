@@ -32,16 +32,26 @@
 
   <main>
     <section class="upload">
-      <h2>📚 Nhập tài liệu học tập</h2>
-      <input type="file" id="fileInput" accept=".txt,.pdf,.png,.jpg,.jpeg,.docx,.pptx" />
-      <!-- Nút import đứng riêng -->
-      <button id="importBtn" class="import-button">📥 Import tài liệu</button>
-      <!-- Hai nút tóm tắt & chi tiết nằm cùng hàng -->
-      <div class="summary-detail-buttons">
-        <button id="summaryBtn">📝 Tóm tắt nội dung</button>
-        <button id="detailBtn">🔍 Chi tiết nội dung</button>
-      </div>
-    </section>
+    <h2>📚 Nhập tài liệu học tập</h2>
+    
+    <div id="dropArea" class="upload-box">
+        <div class="icon">☁️</div>
+        <p>Kéo thả hình ảnh/tài liệu vào đây</p>
+        <p class="small-text">hoặc nhấn <strong>Ctrl+V</strong> để dán ảnh copy từ web</p>
+        
+        <input type="file" id="fileInput" accept=".txt,.pdf,.png,.jpg,.jpeg,.docx,.pptx" hidden />
+        <button id="browseBtn" class="browse-btn">📂 Chọn file từ máy</button>
+    </div>
+
+    <div class="main-buttons">
+        <button id="importBtn" class="import-button">🚀 Phân tích & Tạo Mindmap</button>
+        <button id="clearBtn" class="clear-button" disabled>🗑️ Xóa File đang chọn</button> 
+    </div>
+    
+    <div class="summary-detail-buttons">
+        <button id="summaryBtn">📝 Tóm tắt</button>
+        <button id="detailBtn">🔍 Chi tiết</button>
+    </div>
 
     <section class="mindmap">
       <h2>🧠 Mindmap bài học</h2>
@@ -61,4 +71,7 @@
   <script type="module" src="./Js/User_navbar.js"></script>
 </body>
 
+
 </html>
+</html>
+
